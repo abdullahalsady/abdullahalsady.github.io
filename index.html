@@ -323,7 +323,7 @@
             </div>
         </section>
 
-        <section id="connect-section" class="grid grid-cols-12 grid-border-t relative z-10 bg-[#fff6e8] transition-colors duration-700">
+        <section id="newsletter" class="grid grid-cols-12 grid-border-t relative z-10 bg-[#fff6e8] transition-colors duration-700">
             <div class="col-span-12 md:col-span-6 grid-border-r bg-[#fabf29] p-8 md:p-16 flex flex-col justify-between min-h-[400px] newsletter-block">
                 <div>
                     <div class="flex justify-between items-start mb-4 opacity-60 font-mono-mod text-sm text-black"><span>(07)</span><span>NEWSLETTER</span></div>
@@ -331,10 +331,17 @@
                     <h3 class="text-4xl font-display font-bold text-black">SADY'S NOTES</h3>
                     <p class="font-mono-mod text-sm mt-2 max-w-xs leading-relaxed text-black">Philosophy, psychology, and simple stories from my life.</p>
                 </div>
-                <form class="flex w-full border-b border-black pb-2 mt-8 md:mt-0" onsubmit="event.preventDefault(); alert('Subscribed!')">
-                    <input type="email" placeholder="EMAIL ADDRESS" class="bg-transparent w-full font-mono-mod text-sm placeholder:text-black/50 focus:outline-none hover-trigger text-black">
-                    <button class="font-mono-mod text-sm hover:text-white transition-colors uppercase font-bold hover-trigger text-black">Subscribe</button>
-                </form>
+                
+                <!-- NEW FEATURE HTML UPDATED HERE -->
+                <div class="mt-8 md:mt-0">
+                    <form id="newsletter-form" class="flex w-full border-b border-black pb-2">
+                        <input type="email" id="email" name="email" required placeholder="EMAIL ADDRESS" class="bg-transparent w-full font-mono-mod text-sm placeholder:text-black/50 focus:outline-none hover-trigger text-black">
+                        <button type="submit" id="submit-btn" class="font-mono-mod text-sm hover:text-white transition-colors uppercase font-bold hover-trigger text-black">Subscribe</button>
+                    </form>
+                    <p id="form-message" class="font-mono-mod text-xs mt-3 hidden"></p>
+                </div>
+                <!-- NEW FEATURE HTML ENDS HERE -->
+
             </div>
             <div class="col-span-12 md:col-span-6 bg-[#1c1c1c] text-[#fff6e8] p-8 md:p-16 flex flex-col justify-between min-h-[400px] contact-block">
                 <div class="flex justify-between items-start mb-4 opacity-60 font-mono-mod text-sm"><span>(08)</span><span>CONNECT</span></div>
@@ -349,7 +356,7 @@
                         <i data-lucide="arrow-right" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
                     <div class="w-full h-[1px] bg-[#fff6e8] opacity-20 contact-line scale-x-0 origin-left"></div>
-                    <a href="mailto:is.sady.10@gmail.com" class="flex items-center justify-between group cursor-pointer hover-trigger contact-link">
+                    <a href="mailto:abdullahalsady2005@gmail.com" class="flex items-center justify-between group cursor-pointer hover-trigger contact-link">
                         <span class="text-3xl md:text-5xl font-display group-hover:pl-4 transition-all duration-300">Email</span>
                         <i data-lucide="arrow-right" class="opacity-0 group-hover:opacity-100 transition-opacity duration-300"></i>
                     </a>
@@ -445,18 +452,15 @@
             gsap.to('.about-text', { scrollTrigger: { trigger: '#about', start: 'top 70%' }, opacity: 1, y: 0, duration: 1, ease: "power3.out" });
             gsap.to('.focus-item', { scrollTrigger: { trigger: '.about-right', start: 'top 70%' }, opacity: 1, x: 0, stagger: 0.2, duration: 0.8, ease: "power3.out" });
 
-            // --- 7. PREMIUM PROJECTS ANIMATION (REBUILT) ---
+            // --- 7. PREMIUM PROJECTS ANIMATION ---
             const items = document.querySelectorAll('.project-item');
             const glowBg = document.getElementById('glow-bg');
 
-            // Initialize: Set all images to hidden state
             const images = document.querySelectorAll('.sticky-images-container div[id^="img-"]');
             images.forEach(img => {
                 gsap.set(img, { opacity: 0, zIndex: 0 }); 
             });
-            // Show first image initially
             if(images.length > 0) gsap.set(images[0], { opacity: 1, zIndex: 10 });
-
 
             items.forEach((item) => {
                 const targetId = item.getAttribute('data-target');
@@ -471,53 +475,29 @@
             });
 
             function updateActive(activeItem, activeImage, color) {
-                // 1. Text Interaction
                 items.forEach(el => { el.classList.remove('active', 'opacity-100'); el.classList.add('opacity-30'); });
                 activeItem.classList.remove('opacity-30'); activeItem.classList.add('active', 'opacity-100');
                 
-                // 2. Glow Color Transition
-                if(color) {
-                    glowBg.style.backgroundColor = color + '33'; 
-                }
+                if(color) { glowBg.style.backgroundColor = color + '33'; }
 
-                // 3. Cinematic Image Transition (Slide Up + Scale)
                 if(activeImage) {
                     const stickyImages = document.querySelectorAll('.sticky-images-container div[id^="img-"]');
-                    
                     stickyImages.forEach(img => {
                         if (img === activeImage) {
-                            // ENTERING IMAGE
-                            gsap.set(img, { zIndex: 20 }); // Bring to front
+                            gsap.set(img, { zIndex: 20 }); 
                             gsap.fromTo(img, 
-                                { 
-                                    yPercent: 100, // Start from below
-                                    scale: 1.3,    // Zoomed in
-                                    opacity: 1 
-                                },
-                                { 
-                                    yPercent: 0,   // Slide up
-                                    scale: 1,      // Scale down to normal (Parallax feel)
-                                    opacity: 1,
-                                    duration: 1.2, 
-                                    ease: "power4.inOut" 
-                                }
+                                { yPercent: 100, scale: 1.3, opacity: 1 },
+                                { yPercent: 0, scale: 1, opacity: 1, duration: 1.2, ease: "power4.inOut" }
                             );
-                            // Inner Image Parallax (Optional fine detail)
                             const innerImg = img.querySelector('img');
                             if(innerImg) {
                                 gsap.fromTo(innerImg, { scale: 1.2 }, { scale: 1, duration: 1.5, ease: "power3.out" });
                             }
-
                         } else {
-                            // EXITING IMAGE
-                            gsap.set(img, { zIndex: 1 }); // Send to back
+                            gsap.set(img, { zIndex: 1 }); 
                             gsap.to(img, { 
-                                scale: 0.95,       // Slight shrink
-                                opacity: 0.5,      // Fade out partially then fully
-                                filter: "brightness(0.3)", // Darken
-                                duration: 1.0, 
-                                ease: "power2.out",
-                                onComplete: () => gsap.set(img, { opacity: 0 }) // Hide completely after
+                                scale: 0.95, opacity: 0.5, filter: "brightness(0.3)", duration: 1.0, ease: "power2.out",
+                                onComplete: () => gsap.set(img, { opacity: 0 }) 
                             });
                         }
                     });
@@ -540,6 +520,35 @@
             // --- 9. Contact Animations ---
             gsap.to('.contact-line', { scrollTrigger: { trigger: '.contact-block', start: 'top 60%' }, scaleX: 1, stagger: 0.2, duration: 1, ease: "power3.inOut" });
             gsap.from('.contact-link', { scrollTrigger: { trigger: '.contact-block', start: 'top 60%' }, y: 20, opacity: 0, stagger: 0.2, duration: 0.8, ease: "power3.out", delay: 0.5 });
+            
+            // --- 10. NEW FEATURE: NEWSLETTER SUBMISSION LOGIC ---
+            const form = document.getElementById('newsletter-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const messageEl = document.getElementById('form-message');
+            
+            // YOU MUST REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL (Instructions below)
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbybMSWX2bc7xczKTvlfFtPxajJov7DDhxKtWC3k7lh9fcDz65Ds7AqDY4FRLUWXYX_7bA/exec';
+
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                submitBtn.textContent = 'SENDING...';
+                
+                let requestBody = new FormData(form);
+                
+                fetch(scriptURL, { method: 'POST', body: requestBody })
+                    .then(response => {
+                        messageEl.textContent = 'Thanks for subscribing! Check your email.';
+                        messageEl.className = 'font-mono-mod text-xs mt-3 text-green-700 block';
+                        submitBtn.textContent = 'SUBSCRIBE';
+                        form.reset();
+                        setTimeout(() => messageEl.classList.add('hidden'), 5000);
+                    })
+                    .catch(error => {
+                        messageEl.textContent = 'Something went wrong. Please try again.';
+                        messageEl.className = 'font-mono-mod text-xs mt-3 text-red-600 block';
+                        submitBtn.textContent = 'SUBSCRIBE';
+                    });
+            });
         });
     </script>
 </body>
